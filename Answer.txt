@@ -1,0 +1,74 @@
+Please upload your code in a github repo and share it with us
+If applicable add unit test cases
+Comments at appropriate places 
+
+q1: One of our products is in charge of downloading and ingesting millions of records from our clients.
+Recently during ingesting a large dataset we had our entire DB(Postgres) go down and the entire ingestion process from pandas data frame to SQL took around 2-3 hours because of the RAM unavailability.
+Now this has two simple fixes
+
+- Increase ram/ scale the DB on demand
+- change our code to accommodate these restrictions and make the entire ingestion process much faster on the way.
+
+How would you approach this? We are not looking for a full-blown ingestion logic. Just a small script to take a given CSV file and upload it to DB in an efficient manner.
+Write code to take a large csv file( > 1GB ) and ingest it to table - public.test_od
+
+Answer
+
+
+
+-- Scale the Database on Demand. 
+-- Pandas to Sql ingestion is done. (need to find the better approach for ingestion into Postgres)
+
+Answer ---
+
+
+-- pandas to sql ingesetion is taking time more compared to running, "SQL" statements using postgress cursors.
+
+since we're handling datasets (csv files). 
+
+Here Ingestion Logic,
+As from the scenario, the pandas data frame to sql took 2-3 hrs. 
+so, we can convert the exisiting pandas DataFrame to String Buffer. (using io module)
+Approach for loading data into DB:
+    we need to create a connection object.
+    create a cursor out of the connection object. 
+    once the cursor is created, use "copy_from" method to load the string buffer data into database. 
+    Using this approach, the ingestion is faster, behind scenes,
+    the copy_from method using inbuilt "COPY" command which is quite faster when compared to other method
+
+Below is optional method for reading the data efficiently. 
+
+( the below approach is optimize the reading performance of DataFrames)
+Approach for Reading large csv files into DataFrame
+    if reading large csv files using pandas dataframe is difficult, 
+    there are some modules, which we can use to read the large datasets faster. 
+    like Dask, Modin. 
+    (these are libs which are similar to pandas,
+    these modules have better multiprocessing and multi threading fetures.)
+
+
+q2: At Saama we have two main products in the Smart Series
+1. Smart Series-1
+2. Smart Series-2
+
+both these products run on a flask backend.
+Write an API using flask to upload a CSV file and insert it into a new timestamped table.
+
+given this API request
+
+curl --location --request POST 'http://localhost:5000/api/file-import' \
+--form 'files=@"/Users/master_study_list.csv"' \
+--form 'create_usr_id="ashish"
+--form 'schema="public"'
+
+
+Create a new table with the data in given schema as public.master_study_list_2022_01_21_17_09_11
+Where 2022_01_21 is the date
+and 17_09_11 is the time with seconds
+
+Answer,
+
+I have written the logic in app.py file. 
+which has contain all the logics needed. it will read that api and load the data into db. 
+
+You may add in some test cases if time permits (not required).
